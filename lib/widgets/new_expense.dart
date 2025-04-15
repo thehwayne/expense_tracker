@@ -44,7 +44,7 @@ class _NewExpenseState extends State<NewExpense> {
             children: [
               Expanded(
                 child: TextField( // Text field for amount here
-                  controller: _amountController, // Clearly linked to the established amountController
+                  controller: _amountController, // Linked to the established amountController
                   keyboardType: TextInputType.number, // Optimized for number
                     decoration: InputDecoration(
                       prefixText: '\$ ', //Figured out the prefix to $
