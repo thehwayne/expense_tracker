@@ -29,23 +29,15 @@ class _ExpensesState extends State<Expenses> {
       _registeredExpenses.add(expense);
     });
   }
-
+  
   void _removeExpense(Expense expense) {
-    int expenseIndex = _registeredExpenses.indexOf(expense);
     setState(() {
       _registeredExpenses.remove(expense);
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          duration: Duration(seconds: 3),
-          content: Text('Expense Removed'),
-          action: SnackBarAction(
-              label: 'Undo',
-              onPressed: () {
-                setState(() {
-                  _registeredExpenses.insert(expenseIndex, expense);
-                });
-              })),
+        content: Text('Expense Removed'),
+      ),
     );
   }
 
