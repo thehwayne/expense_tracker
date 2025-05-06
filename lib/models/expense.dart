@@ -30,7 +30,7 @@ class Expense {
   }
 }
 
-//Expense Bucket (for Assignment)
+//Expense Bucket Class (for Assignment)
 class ExpenseBucket {
   const ExpenseBucket({
     required this.category,
@@ -47,7 +47,7 @@ class ExpenseBucket {
         expense.category == category
         ).toList();
 
-  // This should get the total of expenses (get totalExpenses)
+  // Getters. This should get the total of expenses (get totalExpenses)
   double get totalExpenses {
     double sum = 0;
 
