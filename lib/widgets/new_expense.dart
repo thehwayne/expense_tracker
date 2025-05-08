@@ -2,13 +2,13 @@ import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-final formatter = DateFormat.yMd();
-
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key, required this.onAddExpense});
+
   final void Function(Expense expense) onAddExpense;
   @override
   State<NewExpense> createState() {
+    // TODO: implement createState
     return _NewExpenseState();
   }
 }
@@ -19,20 +19,19 @@ class _NewExpenseState extends State<NewExpense> {
   DateTime? _selectedDate;
   Category _selectedCategory = Category.leisure;
 
-  //Controller for amount
   @override
   void dispose() {
     _titleController.dispose();
     _amountController.dispose();
-    //Make sure to dispose of it
     super.dispose();
   }
 
   void _submitExpenseData() {
     final enteredAmount = double.tryParse(_amountController.text);
-    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    final isInvalidAmount = enteredAmount == null || enteredAmount <= 0;
+    //Check if title is empty
     if (_titleController.text.trim().isEmpty ||
-        amountIsInvalid ||
+        isInvalidAmount ||
         _selectedDate == null) {
       showDialog(
           context: context,
@@ -51,6 +50,7 @@ class _NewExpenseState extends State<NewExpense> {
               ));
       return;
     }
+    //Do the stuff to save the expense
     widget.onAddExpense(
       Expense(
           title: _titleController.text,
@@ -64,11 +64,13 @@ class _NewExpenseState extends State<NewExpense> {
   void _presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(now.year - 1, now.month, now.day);
+
     final pickedDate = await showDatePicker(
-        context: context,
-        initialDate: now,
-        firstDate: firstDate,
-        lastDate: now);
+      context: context,
+      initialDate: now,
+      firstDate: firstDate,
+      lastDate: now,
+    );
     setState(() {
       _selectedDate = pickedDate;
     });
@@ -83,54 +85,95 @@ class _NewExpenseState extends State<NewExpense> {
         height: double.infinity,
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 20),
+            padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 16),
             child: Column(
               children: [
-                Row(
-                  children: [
+                if (width >= 600)
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Expanded(
                       child: TextField(
                         controller: _titleController,
                         maxLength: 50,
                         keyboardType: TextInputType.name,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           label: Text('Title'),
                         ),
                       ),
                     ),
-                  ],
-                ),
-                Row(
-                  children: [
+                    const SizedBox(width: 24),
                     Expanded(
                       child: TextField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           prefixText: '\$',
-                          label: Text("Amount"),
+                          label: Text('Amount'),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            _selectedDate == null
-                                ? 'Selected Date'
-                                : formatter.format(_selectedDate!),
-                          ),
-                          IconButton(
-                              onPressed: _presentDatePicker,
-                              icon: const Icon(Icons.calendar_month)),
-                        ],
-                      ),
+                  ])
+                else
+                  TextField(
+                    controller: _titleController,
+                    maxLength: 50,
+                    keyboardType: TextInputType.name,
+                    decoration: const InputDecoration(
+                      label: Text('Title'),
                     ),
-                  ],
-                ),
+                  ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          // print(_titleController.text);
+                          // print(_amountController.text);
+                          _submitExpenseData();
+                        },
+                        child: const Text('Save Expense'),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _amountController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            prefixText: '\$ ',
+                            label: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'Selected Date'
+                                  : formatter.format(_selectedDate!),
+                            ),
+                            IconButton(
+                                onPressed: _presentDatePicker,
+                                icon: const Icon(Icons.calendar_month)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 20),
                 Row(
                   children: [
                     DropdownButton(
@@ -154,19 +197,23 @@ class _NewExpenseState extends State<NewExpense> {
                         });
                       },
                     ),
-                    Spacer(),
+                    const Spacer(),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Cancel"),
+                      child: const Text('Cancel'),
                     ),
                     ElevatedButton(
-                      onPressed: _submitExpenseData,
-                      child: Text('Save Expense'),
-                    ),
+                      onPressed: () {
+                        print(_titleController.text);
+                        print(_amountController.text);
+                        _submitExpenseData();
+                      },
+                      child: const Text('Save Expense'),
+                    )
                   ],
-                ),
+                )
               ],
             ),
           ),
@@ -175,5 +222,6 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 }
+
 
 
