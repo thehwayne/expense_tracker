@@ -114,6 +114,7 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 
+  // This is the build method that renders the widget tree for this screen
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
@@ -129,7 +130,9 @@ class _NewExpenseState extends State<NewExpense> {
             child: Column(
               children: [
                 // This relates to a Responsive layout
-                // Use row if wide, otherwise stack vertically
+                // If the screen is wide, show Title and Amount fields side-by-side
+                // Otherwise, stack 'em
+
                 if (width >= 600)
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,12 +171,12 @@ class _NewExpenseState extends State<NewExpense> {
                   ),
 
 
-                // Wide code used to be here. It's still in the code
+                // Wide code for buttons used to be here. It's still in the code
                 // But it's now on the bottom of this code
                 // Why? I had a bit of trouble with something, so I placed it there to making working on it easier
                 // Anyway, back to the code
 
-                // Or else, a more compact layout for amount and date picker
+                // In narrow layout, show Amount and Date picker in a single row
                 if (width < 600)
                   Row(
                     children: [
@@ -279,7 +282,7 @@ class _NewExpenseState extends State<NewExpense> {
                   ],
                 ),
 
-                // If wide, show Save/Cancel in a separate row (prevents overflow)
+                // If wide, show Save/Cancel in a separate row 
                 if (width >= 600)
                   Row(
                     children: [
