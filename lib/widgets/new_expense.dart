@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:expense_tracker/models/expense.dart';
 import 'package:flutter/material.dart';
@@ -166,23 +167,14 @@ class _NewExpenseState extends State<NewExpense> {
                     ),
                   ),
 
-                // If wide, show Save/Cancel in a row below title/amount
-                if (width >= 600)
-                  Row(
-                    children: [
-                      const Spacer(),
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: _submitExpenseData,
-                        child: const Text('Save Expense'),
-                      ),
-                    ],
-                  )
-                else
-                  // Or else, a more compact layout for amount and date picker
+
+                // Wide code used to be here. It's still in the code
+                // But it's now on the bottom of this code
+                // Why? I had a bit of trouble with something, so I placed it there to making working on it easier
+                // Anyway, back to the code
+
+                // Or else, a more compact layout for amount and date picker
+                if (width < 600)
                   Row(
                     children: [
                       Expanded(
@@ -220,6 +212,7 @@ class _NewExpenseState extends State<NewExpense> {
 
                 // This is the dropdown for choosing the expense category
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     DropdownButton(
                       value: _selectedCategory,
@@ -242,24 +235,66 @@ class _NewExpenseState extends State<NewExpense> {
                     ),
                     const Spacer(),
 
-                    // These are for the cancel and save buttons 
-                    ElevatedButton(
-                      // When pressed, close modal without saving
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
-                    ),
-                    ElevatedButton(
+// From here, it's experimental
+// Basically, had this issue. When horizontal, date picker was gone, and save/cancel buttons were duplicated
+// Hopefully, this fixes it
 
-                      //When pressed, saves expense
-                      onPressed: () {
-                        print(_titleController.text);
-                        print(_amountController.text);
-                        _submitExpenseData();
-                      },
-                      child: const Text('Save Expense'),
-                    )
+                    // This should ensure that the date picker button appears in horizontal mode too
+                    if (width >= 600)
+                      Row(
+                        children: [
+                          Text(
+                            _selectedDate == null
+                                ? 'Selected Date'
+                                : formatter.format(_selectedDate!),
+                          ),
+                          IconButton(
+                            onPressed: _presentDatePicker,
+                            icon: const Icon(Icons.calendar_month),
+                          ),
+                        ],
+                      ),
+
+                    // These are for the cancel and save buttons 
+                    // Experimental fix for the duplicating cancel and save buttons when horizontal
+                    // Used a spread operator for that, learned it here: https://dart.dev/language/operators#spread-operators
+                    // Probably a better fix out there, but this will do
+                    if (width < 600) ...[
+                      const SizedBox(width: 12),
+                      ElevatedButton(
+                        // When pressed, close modal without saving
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        // When pressed, saves expense
+                        onPressed: () {
+                          print(_titleController.text);
+                          print(_amountController.text);
+                          _submitExpenseData();
+                        },
+                        child: const Text('Save Expense'),
+                      ),
+                    ]
                   ],
-                )
+                ),
+
+                // If wide, show Save/Cancel in a separate row (prevents overflow)
+                if (width >= 600)
+                  Row(
+                    children: [
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Cancel'),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: _submitExpenseData,
+                        child: const Text('Save Expense'),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -268,7 +303,3 @@ class _NewExpenseState extends State<NewExpense> {
     });
   }
 }
-
-
-
-
