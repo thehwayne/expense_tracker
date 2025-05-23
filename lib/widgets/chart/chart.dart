@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-
 import 'package:expense_tracker/widgets/chart/chart_bar.dart';
 import 'package:expense_tracker/models/expense.dart';
 
+// This displays a bar chart visualizing total expenses by category
 class Chart extends StatelessWidget {
   const Chart({super.key, required this.expenses});
 
   final List<Expense> expenses;
 
+  // This groups expenses into buckets by category
   List<ExpenseBucket> get buckets {
     return [
       ExpenseBucket.forCategory(expenses, Category.food),
@@ -17,6 +18,7 @@ class Chart extends StatelessWidget {
     ];
   }
 
+  // This finds the highest total amount across all categories
   double get maxTotalExpense {
     double maxTotalExpense = 0;
 
@@ -31,8 +33,10 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // This determines if the app is in dark mode
     final isDarkMode =
         MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.symmetric(
@@ -41,6 +45,8 @@ class Chart extends StatelessWidget {
       ),
       width: double.infinity,
       height: 180,
+
+      // This is background styling with a gradient
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         gradient: LinearGradient(
@@ -52,13 +58,16 @@ class Chart extends StatelessWidget {
           end: Alignment.topCenter,
         ),
       ),
+
       child: Column(
         children: [
+          // Top of the chart: The bar graph
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                for (final bucket in buckets) // alternative to map()
+                // Creates a ChartBar for each category bucket
+                for (final bucket in buckets)
                   ChartBar(
                     fill: bucket.totalExpenses == 0
                         ? 0
@@ -67,7 +76,10 @@ class Chart extends StatelessWidget {
               ],
             ),
           ),
+
           const SizedBox(height: 12),
+
+          // Bottom of the chart: The category icons under each bar
           Row(
             children: buckets
                 .map(
