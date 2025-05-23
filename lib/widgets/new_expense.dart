@@ -182,7 +182,7 @@ class _NewExpenseState extends State<NewExpense> {
                     ],
                   )
                 else
-                  // Or else, a more compact layout for amount + date picker
+                  // Or else, a more compact layout for amount and date picker
                   Row(
                     children: [
                       Expanded(
@@ -242,12 +242,15 @@ class _NewExpenseState extends State<NewExpense> {
                     ),
                     const Spacer(),
 
-                    // These relate to the cancel and save buttons 
+                    // These are for the cancel and save buttons 
                     ElevatedButton(
+                      // When pressed, close modal without saving
                       onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel'),
                     ),
                     ElevatedButton(
+
+                      //When pressed, saves expense
                       onPressed: () {
                         print(_titleController.text);
                         print(_amountController.text);
