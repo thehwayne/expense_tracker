@@ -71,7 +71,7 @@ void main() {
         ),
       ),
 
-      // This is how the system decides whether to use light or dark mode
+      // This is how the application decides whether to use light or dark mode
       themeMode: ThemeMode.system,
 
       // And the starting screen of the app!
