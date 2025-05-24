@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key, required this.onAddExpense});
 
-  // A callback to send new expense back
   final void Function(Expense expense) onAddExpense; 
 
   @override
